@@ -21,12 +21,14 @@ public class SnakeSection {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SnakeSection)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        SnakeSection section = (SnakeSection) o;
+        SnakeSection that = (SnakeSection) o;
 
-        if (x != section.x) return false;
-        return y == section.y;
+        if (x != that.x) return false;
+        if (y != that.y) return false;
+
+        return true;
     }
 
     @Override

@@ -137,7 +137,7 @@ public class Room {
         int x = (int) (Math.random() * width);
         int y = (int) (Math.random() * height);
 
-        mouse = new Mouse(x, y);
+        mouse = new Mouse(x % width, y % height);
     }
 
 
@@ -149,7 +149,6 @@ public class Room {
         game.createMouse();
         game.run();
     }
-
 
     private int initialDelay = 520;
     private int delayStep = 20;
