@@ -1,12 +1,9 @@
 package com.javarush.task.task23.task2312;
 
-/**
- * @author sergeytoropov
- * @since 26.07.17
- */
 public class SnakeSection {
     private int x;
     private int y;
+
 
     public SnakeSection(int x, int y) {
         this.x = x;
@@ -19,5 +16,23 @@ public class SnakeSection {
 
     public int getY() {
         return y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SnakeSection)) return false;
+
+        SnakeSection section = (SnakeSection) o;
+
+        if (x != section.x) return false;
+        return y == section.y;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        return result;
     }
 }
