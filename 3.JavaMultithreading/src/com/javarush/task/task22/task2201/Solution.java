@@ -1,6 +1,6 @@
 package com.javarush.task.task22.task2201;
 
-/* 
+/*
 Строки нитей или строковые нити? Вот в чем вопрос
 */
 public class Solution {
@@ -32,6 +32,16 @@ public class Solution {
     }
 
     public synchronized String getPartOfString(String string, String threadName) {
-        return null;
+        try {
+            return string.substring(string.indexOf("\t") + 1, string.lastIndexOf("\t"));
+        } catch (StringIndexOutOfBoundsException sioobe) {
+            if (FIRST_THREAD_NAME.equals(threadName)) {
+                throw new TooShortStringFirstThreadException(sioobe);
+            } else if (SECOND_THREAD_NAME.equals(threadName)) {
+                throw new TooShortStringSecondThreadException(sioobe);
+            } else {
+                throw new RuntimeException(sioobe);
+            }
+        }
     }
 }
