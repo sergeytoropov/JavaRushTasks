@@ -1,6 +1,6 @@
 package com.javarush.task.task24.task2405;
 
-/* 
+/*
 Black box
 */
 public class Solution implements Action {
@@ -11,15 +11,43 @@ public class Solution implements Action {
     private Action solutionAction = new Action() {
         //!!!!! Changes can be here
         //!!!!! Изменения могут быть тут
+        private Action action;
 
         public void someAction() {
-            if (param > 0) {
-
-            } else {
-
-            }
             //!!!!! All changes have to be here
             //!!!!! Все изменения должны быть только тут
+
+            if (Solution.this.param > 0) {
+                action = new FirstClass() {
+                    @Override
+                    public void someAction() {
+                        super.someAction();
+
+                        SecondClass sc = new SecondClass();
+                        sc.someAction();
+
+                        System.out.println(SecondClass.SPECIFIC_ACTION_FOR_ANONYMOUS_SECOND_CLASS_PARAM.replaceFirst("\n", "") + Solution.this.param);
+                    }
+
+                    @Override
+                    public Action getDependantAction() {
+                        return null;
+                    }
+                };
+            } else {
+                action = new SecondClass() {
+                    @Override
+                    public void someAction() {
+                        super.someAction();
+                        System.out.println(SPECIFIC_ACTION_FOR_ANONYMOUS_SECOND_CLASS_PARAM.replaceFirst("\n", "") + Solution.this.param);
+                    }
+                };
+            }
+
+            while (Solution.this.param > 0) {
+                System.out.println(Solution.this.param--);
+            }
+            action.someAction();
         }
     };
 
