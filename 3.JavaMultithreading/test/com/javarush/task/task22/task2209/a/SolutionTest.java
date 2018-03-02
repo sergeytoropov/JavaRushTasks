@@ -1,4 +1,4 @@
-package com.javarush.task.task22.task2209;
+package com.javarush.task.task22.task2209.a;
 
 import org.junit.Test;
 
@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author sergeytoropov

@@ -12,17 +12,14 @@ public class Solution {
     private int countItems;
 
     public Iterator getIterator(final String name) {
-        class LocalIterator implements Iterator {
-            public LocalIterator() {
+        return new Iterator() {
+            @Override
+            public Iterator next() {
                 countItems++;
                 System.out.println(name + " item " + countItems);
+                return this;
             }
-
-            public Iterator next() {
-                return new LocalIterator();
-            }
-        }
-        return new LocalIterator();
+        }.next();
     }
 
     public static void main(String[] args) {
