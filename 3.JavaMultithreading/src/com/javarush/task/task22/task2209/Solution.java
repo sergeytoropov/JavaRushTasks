@@ -1,9 +1,7 @@
 package com.javarush.task.task22.task2209;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /*
 Составить цепочку слов
@@ -32,7 +30,7 @@ public class Solution {
         }
 
         private static void checkWord(final String word) throws TaskException {
-            if (word == null || word.length() < 2) {
+            if (word == null || word.length() < 1) {
                 throw new TaskException("Слово должно состоять из минимум двух символов");
             }
         }
@@ -76,17 +74,47 @@ public class Solution {
         }
 
         public void inc() throws TaskException {
-            activeValue =+ 1;
+            activeValue = activeValue + 1;
             if (activeValue > value) {
                 throw new TaskException("Добавили лишнее слово.");
             }
         }
 
         public void dec() throws TaskException {
-            activeValue =- 1;
+            activeValue = activeValue - 1;
             if (activeValue < 0) {
                 throw new TaskException("Нет доступных слов.");
             }
+        }
+
+        public boolean availableWord() {
+            return activeValue > 0 ? true : false;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Point)) return false;
+
+            Point point = (Point) o;
+
+            if (value != point.value) return false;
+            if (i != point.i) return false;
+            if (j != point.j) return false;
+            if (activeValue != point.activeValue) return false;
+            if (word != null ? !word.equals(point.word) : point.word != null) return false;
+            return isNullObject != null ? isNullObject.equals(point.isNullObject) : point.isNullObject == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = value;
+            result = 31 * result + (word != null ? word.hashCode() : 0);
+            result = 31 * result + i;
+            result = 31 * result + j;
+            result = 31 * result + (isNullObject != null ? isNullObject.hashCode() : 0);
+            result = 31 * result + activeValue;
+            return result;
         }
 
         @Override
@@ -95,45 +123,189 @@ public class Solution {
         }
     }
 
-    public static final Point[][] map = new Point[33][33];
+    public static class Algorithm {
 
-    private static final int INIT = 10;
-    private static final int EXIT = 11;
-    private static final int ROOT = 12;
-    private static final int NEXT = 13;
-    private static final int PREV = 14;
-    private static int state = INIT;
+        public final Point[][] map = new Point[33][33];
+        private final int INIT = 10;
+        private final int EXIT = 11;
+        private final int ROOT = 12;
+        private final int NEXT = 13;
+        private final int PREV = 14;
+        private final int ALTERNATIVE = 15;
+        private int state = INIT;
+        private Point root = null;
+        private Deque<Point> path = new LinkedList<>();
+        private int maxPath;
+        private List[] answers;
 
-    public static void init(final String[] words) throws TaskException {
-        for (int i = 0; i < map.length; i++) {
+        public Point[][] getMap() {
+            return map;
+        }
+
+        public void init(final String[] words) throws TaskException {
+            for (int i = 0; i < map.length; i++) {
+                for (int j = 0; j < map[i].length; j++) {
+                    map[i][j] = new Point();
+                }
+            }
+
+            for (int index = 0; index < words.length; index++) {
+                String word = words[index];
+                int i = Util.firstIndex(word);
+                int j = Util.lastIndex(word);
+                Point p = map[i][j];
+                map[i][j] = new Point(p.value + 1, word, i, j);
+            }
+
+            maxPath = words.length;
+
+            answers = new ArrayList[words.length];
+            for (int i = 0; i < answers.length; i++) {
+                answers[i] = null;
+            }
+        }
+
+        public Point root() throws TaskException {
+            for (int i = 0; i < map.length; i++) {
+                for (int j = 0; j < map[i].length; j++) {
+                    if (map[i][j].isNullObject == false) {
+                        return map[i][j];
+                    }
+                }
+            }
+            throw new TaskException("Отсутствует корневой элемент.");
+        }
+
+        /**
+         * @param prevRoot - предыдущий корневой элемент.
+         * @return Возвращает следующий корневой элемент. Если не найден то NULL.
+         */
+        public Point root(Point prevRoot) {
+            int prevJ = prevRoot.j + 1;
+            for (int i = prevRoot.i; i < map.length; i++) {
+                for (int j = prevJ; j < map[i].length; j++) {
+                    if (map[i][j].isNullObject == false) {
+                        return map[i][j];
+                    }
+                }
+                prevJ = 0;
+            }
+            return null;
+        }
+
+        public Point next(Point prevWord) {
+            int i = prevWord.j;
             for (int j = 0; j < map[i].length; j++) {
-                map[i][j] = new Point();
+                if (map[i][j].isNullObject == false && map[i][j].availableWord()) {
+                    return map[i][j];
+                }
+            }
+            return null;
+        }
+
+        public Point alternative(Point prevWord) {
+            int i = prevWord.i;
+            for (int j = prevWord.j + 1; j < map[i].length; j++) {
+                if (map[i][j].isNullObject == false && map[i][j].availableWord()) {
+                    return map[i][j];
+                }
+            }
+            return null;
+        }
+
+        public void addAnswer() {
+            int currentLength = path.size();
+            if (currentLength <= answers.length && currentLength > 0) {
+                if (answers[currentLength - 1] == null) {
+                    List<Point> list = new ArrayList<>();
+
+                    Iterator<Point> iter = path.iterator();
+                    while (iter.hasNext()) {
+                        list.add(iter.next());
+                    }
+                    answers[currentLength - 1] = list;
+                }
             }
         }
 
-        for (int index = 0; index < words.length; index++) {
-            String word = words[index];
-            int i = Util.firstIndex(word);
-            int j = Util.lastIndex(word);
-            Point p = map[i][j];
-            map[i][j] = new Point(p.value + 1, word, i, j);
-        }
-    }
-
-    public static void algorithm(final String[] words) throws TaskException {
-       boolean isRun = true;
-       while(isRun) {
-            switch (state) {
-                case INIT:
-                    state = EXIT;
-                    init(words);
-                    break;
-
-                case EXIT:
-                    isRun = false;
-                    break;
+        public List<Point> getMaxAnswer() {
+            for (int i = answers.length - 1; i >= 0; i--) {
+                if (answers[i] != null) {
+                    return answers[i];
+                }
             }
-       }
+            return new ArrayList<>();
+        }
+
+        public void algorithm(final String[] words) throws TaskException {
+            boolean isRun = true;
+            while (isRun) {
+                switch (state) {
+                    case INIT:
+                        state = NEXT;
+                        init(words);
+                        root = root();
+                        path.addLast(root);
+                        root.dec();
+                        break;
+
+                    case NEXT:
+                        addAnswer();
+                        if (path.size() == maxPath) {
+//                    if (false) {
+                            state = EXIT;
+                        } else {
+                            Point word;
+                            if ((word = next(path.getLast())) != null) {
+                                path.addLast(word);
+                                word.dec();
+
+                                state = NEXT;
+                            } else {
+                                state = PREV;
+                            }
+                        }
+                        break;
+
+                    case ALTERNATIVE:
+                        state = PREV;
+
+                        Point word;
+                        if ((word = path.pollLast()) != null) {
+                            word.inc();
+
+                            Point newWord = alternative(word);
+                            if (newWord != null) {
+                                path.addLast(newWord);
+                                newWord.dec();
+                                state = NEXT;
+                            }
+                        }
+                        break;
+
+                    case PREV:
+                        state = ROOT;
+                        if (path.size() > 0) {
+                            state = ALTERNATIVE;
+                        }
+                        break;
+
+                    case ROOT:
+                        if ((root = root(root)) != null) {
+                            path.addLast(root);
+                            root.dec();
+                            state = NEXT;
+                        } else {
+                            state = EXIT;
+                        }
+                        break;
+
+                    case EXIT:
+                        isRun = false;
+                        break;
+                }
+            }
+        }
     }
 
     public static String[] getWords(String fileName) throws FileNotFoundException, IOException {
@@ -151,7 +323,6 @@ public class Solution {
         String fileName;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             fileName = reader.readLine();
-            reader.close();
 
             StringBuilder result = getLine(getWords(fileName));
             System.out.println(result.toString());
@@ -167,8 +338,22 @@ public class Solution {
         if (words == null || words.length == 0) {
             return sb;
         }
+        try {
+            Algorithm algorithm = new Algorithm();
+            algorithm.algorithm(words);
 
-        sb.append(1);
+            boolean isNext = false;
+            for(Point p: algorithm.getMaxAnswer()) {
+                if (isNext) {
+                    sb.append(" ");
+                } else {
+                    isNext = true;
+                }
+                sb.append(p.word);
+            }
+        } catch (TaskException ex) {
+            sb.append(ex.toString());
+        }
         return sb;
     }
 }
