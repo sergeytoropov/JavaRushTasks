@@ -1,32 +1,44 @@
 package com.javarush.task.task08.task0812;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.IntStream;
+import java.util.*;
 
-/* 
+/*
 Cамая длинная последовательность
 */
 public class Solution {
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        List<Integer> list = new ArrayList<>();
-        IntStream.range(1, 10).forEach(r -> {
-            try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            ArrayList<Integer> list = new ArrayList<>();
+
+            for (int i = 0; i < 10; i++) {
                 list.add(Integer.valueOf(reader.readLine()));
-            } catch (IOException ex) {
-                System.out.println(ex.toString());
             }
-        });
-        Collections.sort(list);
 
+            int maxLength = 0;
+            int length = 0;
+            int prevValue = 0;
 
-        list.forEach(v -> {
-            System.out.println(v);
-        });
-
+            boolean start = true;
+            for (Integer value: list) {
+                if (start) {
+                    length = 1;
+                    maxLength = length;
+                    prevValue = value;
+                    start = false;
+                } else {
+                    if (prevValue == value) {
+                        length++;
+                        if (length > maxLength) {
+                            maxLength = length;
+                        }
+                    } else {
+                        length = 1;
+                        prevValue = value;
+                    }
+                }
+            }
+            System.out.println(maxLength);
+        }
     }
 }
