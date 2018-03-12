@@ -16,6 +16,7 @@ public abstract class SocketTask<T> implements CancellableTask<T> {
         try {
             socket.close();
         } catch (IOException ex) {
+        } finally {
         }
     }
 
