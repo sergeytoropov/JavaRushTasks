@@ -13,7 +13,11 @@ public class UsersView implements View {
     @Override
     public void refresh(ModelData modelData) {
         StringBuilder sb = new StringBuilder();
-        sb.append("All users:").append("\n");
+        String message = "All users:";
+        if (modelData.isDisplayDeletedUserList()) {
+            message = "All deleted users:";
+        }
+        sb.append(message).append("\n");
         modelData.getUsers().stream().forEach(user -> {
             sb.append("\t").append(user).append("\n");
         });
@@ -27,6 +31,11 @@ public class UsersView implements View {
 
     public void fireEventShowDeletedUsers() {
         controller.onShowAllDeletedUsers();
+    }
+
+
+    public void fireEventOpenUserEditForm(long id) {
+        controller.onOpenUserEditForm(id);
     }
 
     @Override
