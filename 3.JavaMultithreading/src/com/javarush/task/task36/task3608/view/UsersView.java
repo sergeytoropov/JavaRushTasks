@@ -25,6 +25,10 @@ public class UsersView implements View {
         controller.onShowAllUsers();
     }
 
+    public void fireEventShowDeletedUsers() {
+        controller.onShowAllDeletedUsers();
+    }
+
     @Override
     public void setController(Controller controller) {
         this.controller = controller;
