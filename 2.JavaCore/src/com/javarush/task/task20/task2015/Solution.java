@@ -1,11 +1,12 @@
 package com.javarush.task.task20.task2015;
 
 import java.io.*;
+import java.util.TreeMap;
 
 /* 
 Переопределение сериализации
 */
-public class Solution implements Runnable, Serializable {
+public class Solution implements Serializable, Runnable {
     private transient Thread runner;
     private int speed;
 
@@ -15,7 +16,6 @@ public class Solution implements Runnable, Serializable {
         runner.start();
     }
 
-    @Override
     public void run() {
         // do something here, does not matter
     }
@@ -33,6 +33,8 @@ public class Solution implements Runnable, Serializable {
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
+        this.runner = new Thread(this);
+        this.runner.start();
     }
 
     public static void main(String[] args) {
