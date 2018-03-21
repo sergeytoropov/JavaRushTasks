@@ -16,13 +16,12 @@ public class Canvas {
     }
 
     void setPoint(double x, double y, char c) {
-        int iX = (int) x;
-        int iY = (int) y;
+        int iX = (int) Math.round(x);
+        int iY = (int) Math.round(y);
 
-        if (iX < 0 || iY < 0 || iX > width || iY > height) {
+        if (iX < 0 || iY < 0 || iY >= matrix.length || iX >= matrix[0].length) {
             return;
         }
-
         matrix[iY][iX] = c;
     }
 

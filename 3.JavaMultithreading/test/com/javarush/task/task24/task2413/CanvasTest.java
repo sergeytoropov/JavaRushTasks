@@ -24,21 +24,22 @@ public class CanvasTest {
     }
 
     public void printMatrix(char[][] m) {
+        System.out.println("\n--- Start ---\n");
         for(int i = 0; i < m.length; i++) {
             for (int j = 0; j < m[i].length; j++) {
                 System.out.print(m[i][j]);
             }
             System.out.println();
         }
-        System.out.println("\n---\n");
+        System.out.println("\n--- End ---\n");
     }
 
     @Test
     public void draw() {
         canvas = new Canvas(6, 4);
-        int[][] m2 = new int[][] {{1, 2, 3, 4, 5, 6, 7, 8 , 9}};
+        int[][] m2 = new int[][] {{1, 2, 3, 4, 5, 6, 7, 8}};
 
-        canvas.drawMatrix(1, 1, m2, '_');
+        canvas.drawMatrix(1, 1, m2, '-');
         printMatrix(canvas.getMatrix());
     }
 }
