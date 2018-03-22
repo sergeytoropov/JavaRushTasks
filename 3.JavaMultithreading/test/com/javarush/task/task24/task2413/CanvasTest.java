@@ -42,4 +42,11 @@ public class CanvasTest {
         canvas.drawMatrix(1, 1, m2, '-');
         printMatrix(canvas.getMatrix());
     }
+
+    @Test
+    public void clear() {
+        draw();
+        canvas.clear();
+        printMatrix(canvas.getMatrix());
+    }
 }

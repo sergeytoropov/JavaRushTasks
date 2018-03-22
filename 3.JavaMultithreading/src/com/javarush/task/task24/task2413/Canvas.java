@@ -1,5 +1,7 @@
 package com.javarush.task.task24.task2413;
 
+import java.util.stream.IntStream;
+
 /**
  * @author sergeytoropov
  * @since 29.08.17
@@ -15,7 +17,7 @@ public class Canvas {
         this.matrix = new char[height + 2][width + 2];
     }
 
-    void setPoint(double x, double y, char c) {
+    public void setPoint(double x, double y, char c) {
         int iX = (int) Math.round(x);
         int iY = (int) Math.round(y);
 
@@ -25,13 +27,30 @@ public class Canvas {
         matrix[iY][iX] = c;
     }
 
-    void drawMatrix(double x, double y, int[][] matrix, char c) {
+    public void drawMatrix(double x, double y, int[][] matrix, char c) {
         for(int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j] != 0) {
                     setPoint(x + j, y + i, c);
                 }
             }
+        }
+    }
+
+    public void clear() {
+        IntStream.range(0, matrix.length).forEach(i -> {
+            IntStream.range(0, matrix[i].length).forEach(j -> {
+                matrix[i][j] = 0;
+            });
+        });
+    }
+
+    public void print() {
+        for(int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j]);
+            }
+            System.out.println();
         }
     }
 

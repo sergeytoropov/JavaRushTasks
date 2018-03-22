@@ -1,6 +1,7 @@
 package com.javarush.task.task24.task2413;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author sergeytoropov
@@ -14,11 +15,14 @@ public class Arkanoid {
     private Stand stand;
     private List<Brick> bricks;
 
+    private boolean isGameOver;
+
     static Arkanoid game;
 
     public Arkanoid(int width, int height) {
         this.width = width;
         this.height = height;
+        this.isGameOver = false;
     }
 
     public int getWidth() {
@@ -65,6 +69,40 @@ public class Arkanoid {
     }
 
     public void move() {
+        ball.move();
+        stand.move();
+    }
+
+    public void draw(Canvas canvas) {
+        ball.draw(canvas);
+        stand.draw(canvas);
+        bricks.stream().forEach(brick -> brick.draw(canvas));
+    }
+
+    public void checkBricksBump() {
+        Optional<Brick> brick = bricks.stream()
+                .filter(ball::isIntersec)
+                .findFirst();
+
+        if (brick.isPresent()) {
+            double angle = Math.random() * 360;
+            ball.setDirection(angle);
+
+            bricks.remove(brick.get());
+        }
+    }
+
+    public void checkStandBump() {
+        if (ball.isIntersec(stand)) {
+            double angle = 90 + 20 * (Math.random() - 0.5);
+            ball.setDirection(angle);
+        }
+    }
+
+    public void checkEndGame() {
+        if (ball.getY() > height) {
+            this.isGameOver = true;
+        }
     }
 
     public static void main(String[] args) {
