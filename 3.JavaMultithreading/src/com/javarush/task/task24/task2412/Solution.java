@@ -43,7 +43,44 @@ public class Solution {
     public static void sort(List<Stock> list) {
         Collections.sort(list, new Comparator<Stock>() {
             public int compare(Stock stock1, Stock stock2) {
-                return 0;
+                String name1 = (String) stock1.get("name");
+                String name2 = (String) stock2.get("name");
+                int result = name1.compareTo(name2);
+
+                if (result == 0) {
+                    Date date1 = (Date) stock1.get("date");
+                    date1.setHours(0);
+                    date1.setMinutes(0);
+                    date1.setSeconds(0);
+                    Date date2 = (Date) stock2.get("date");
+                    date2.setHours(0);
+                    date2.setMinutes(0);
+                    date2.setSeconds(0);
+                    result = date2.compareTo(date1);
+
+                    if (result == 0) {
+                        Double r1;
+                        if (stock1.containsKey("change")) {
+                            r1 = (double) stock1.get("change");
+                        } else {
+                            double open1 = !stock1.containsKey("open") ? 0 : ((double) stock1.get("open"));
+                            double last1 = !stock1.containsKey("last") ? 0 : ((double) stock1.get("last"));
+                            r1 = last1 - open1;
+                        }
+
+                        Double r2;
+                        if (stock1.containsKey("change")) {
+                            r2 = (double) stock2.get("change");
+                        } else {
+                            double open2 = !stock2.containsKey("open") ? 0 : ((double) stock2.get("open"));
+                            double last2 = !stock2.containsKey("last") ? 0 : ((double) stock2.get("last"));
+                            r2 = last2 - open2;
+                        }
+
+                        return r2.compareTo(r1);
+                    }
+                }
+                return result;
             }
         });
     }
@@ -60,7 +97,7 @@ public class Solution {
         public Stock(String name, String symbol, double change, Date date) {
             put("name", name);
             put("symbol", symbol);
-            put("date", date);
+            put("date", new Date());
             put("change", change);
         }
     }
@@ -81,7 +118,7 @@ public class Solution {
         stocks.add(new Stock("Fake Yahoo! Inc.", "YHOO", .32, getRandomDate()));
         stocks.add(new Stock("Fake Applied Materials, Inc.", "AMAT", .26, getRandomDate()));
         stocks.add(new Stock("Fake Comcast Corporation", "CMCSA", .5, getRandomDate()));
-        stocks.add(new Stock("Fake Sirius Satellite", "SIRI", -.03, getRandomDate()));
+        stocks.add(new Stock("Fake Sirius Satellite", "SIRI", 0.03, getRandomDate()));
 
         return stocks;
     }
