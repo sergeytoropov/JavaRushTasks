@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 27.03.18
  */
 public class Producer implements Runnable {
-    ConcurrentHashMap<String, String> map;
+    private ConcurrentHashMap<String, String> map;
 
     public Producer(ConcurrentHashMap<String, String> map) {
         this.map = map;

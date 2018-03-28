@@ -17,11 +17,15 @@ public class Solution {
     }
 
     public int getSumOfVar1AndVar2() {
-        return var1 + var2;
+        synchronized (Integer.valueOf(var1)) {
+            return var1 + var2;
+        }
     }
 
     public int getSumOfVar3AndVar4() {
-        return var3 + var4;
+        synchronized (Integer.valueOf(var3)) {
+            return var3 + var4;
+        }
     }
 
     public static void main(String[] args) {

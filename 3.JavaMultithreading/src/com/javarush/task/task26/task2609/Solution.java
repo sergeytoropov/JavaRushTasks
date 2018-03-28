@@ -30,7 +30,10 @@ public class Solution {
         int hash = hash(key);
         synchronized (this) {
             for (Node m = buckets[hash]; m != null; m = m.next) {
-                if (m.key.equals(key)) return m.value;
+                if (m.key.equals(key)) {
+                    locks[Math.abs(key.hashCode() % locks.length)] = m.value;
+                    return m.value;
+                }
             }
         }
         return null;
@@ -39,6 +42,7 @@ public class Solution {
     public void clear() {
         for (int i = 0; i < buckets.length; i++) {
             synchronized (this) {
+                locks[Math.abs(buckets[i].hashCode() % locks.length)] = null;
                 buckets[i] = null;
             }
         }
