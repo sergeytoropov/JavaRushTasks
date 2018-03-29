@@ -20,21 +20,20 @@ public class Solution {
         }
     }
 
-    static boolean isSubstringPresent(String substring, String string) {
+    public static boolean isSubstringPresent(String substring, String string) {
         boolean found = false;
         int max = string.length() - substring.length();
-        label:
-        for (int i = 0; i <= max; i++) {
+
+        for (int i = 0; i <= max && found != true; i++) {
             int length = substring.length();
             int j = i;
             int k = 0;
+            found = true;
             while (length-- != 0) {
                 if (string.charAt(j++) != substring.charAt(k++)) {
-                    continue label;
+                    found = false;
                 }
             }
-            found = true;
-            break label;
         }
         return found;
     }

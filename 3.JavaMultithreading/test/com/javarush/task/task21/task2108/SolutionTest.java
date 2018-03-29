@@ -4,22 +4,21 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.hamcrest.CoreMatchers.*;
-import static com.javarush.task.task21.task2108.Solution.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 
 /**
  * @author sergeytoropov
- * @since 21.07.17
+ * @since 29.03.18
  */
 public class SolutionTest {
 
     @Test
     public void equal() {
-        Tree tree = new Tree("willow", new String[]{"s1", "s2", "s3", "s4"});
-        Tree clone = null;
+        Solution.Tree tree = new Solution.Tree("willow", new String[]{"s1", "s2", "s3", "s4"});
+        Solution.Tree clone = null;
         try {
-            clone = (Tree) tree.clone();
+            clone = (Solution.Tree) tree.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
